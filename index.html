@@ -3,87 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Kokurikulum SKSP</title>
+    <title>Sistem Laporan Kokurikulum SKSP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-        body { font-family: 'Roboto', sans-serif; background: #f0fdf4; }
+        body { background: #f0fdf4; font-family: 'Roboto', sans-serif; }
 
-        /* DASHBOARD (Mobile Friendly) */
-        .dashboard-card { background: white; border-top: 5px solid #047857; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        input, select { border: 1px solid #d1d5db; }
-        input:focus, select:focus { outline: 2px solid #059669; }
+        /* DASHBOARD */
+        .dashboard-card { background: white; border-top: 5px solid #047857; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        input, select { border: 1px solid #ccc; }
         .caps { text-transform: uppercase; }
 
-        /* --- PDF CONTAINER (FIXED A4 PIXELS) --- */
-        /* A4 Width at 96DPI = approx 794px.
-           Height = approx 1123px.
-           Kita paksa lebar ini supaya tak lari di mobile.
-        */
-        .hidden-report {
+        /* --- PDF STYLING (VERSI RAPAT & PADAT) --- */
+        
+        /* Container Ghaib - Paksa Lebar Desktop */
+        .hidden-container {
             position: fixed;
             top: 0; left: 0;
             z-index: -9999;
-            width: 794px; /* LEBAR TETAP A4 */
-            min-height: 1122px;
-            background: white;
+            width: 800px; /* Paksa lebar pixel tetap */
+            height: auto;
             visibility: hidden;
+            background: white;
         }
 
         #pdf-content {
             width: 100%;
-            padding: 40px 50px; /* Margin Dalam (Padding) */
+            /* Margin sangat minima untuk jimat ruang */
+            padding: 5mm 15mm; 
             box-sizing: border-box;
-            color: black;
+            color: #000;
+            line-height: 1.1; /* Jarak baris dirapatkan */
             font-family: Arial, sans-serif;
-            font-size: 14px; /* Saiz font standard dokumen */
-            line-height: 1.3;
         }
 
-        /* PDF ELEMENTS STYLING */
-        .header-pdf { text-align: center; border-bottom: 2px solid black; padding-bottom: 10px; margin-bottom: 20px; }
-        .header-pdf img { height: 80px; margin-bottom: 5px; }
-        .header-pdf h2 { margin: 0; font-size: 18px; font-weight: bold; }
-        .header-pdf h3 { margin: 0; font-size: 16px; font-weight: bold; }
+        /* Header */
+        table.header-table { width: 100%; border-bottom: 2px solid black; margin-bottom: 5px; }
+        .header-text h2 { margin: 0; font-size: 14pt; font-weight: bold; }
+        .header-text h3 { margin: 0; font-size: 11pt; font-weight: bold; margin-top: 2px; }
 
-        .tbl-pdf { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
-        .tbl-pdf td { border: 1px solid black; padding: 5px 8px; vertical-align: top; }
-        .tbl-label { background-color: #f3f4f6; font-weight: bold; width: 30%; }
+        /* Info Table */
+        table.info-table { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
+        table.info-table td { border: 1px solid #000; padding: 3px 5px; vertical-align: top; } /* Padding dikurangkan */
+        .bg-gray { background-color: #f0f0f0; font-weight: bold; width: 28%; }
 
-        .section-title { font-weight: bold; text-decoration: underline; margin-bottom: 5px; font-size: 14px; }
-        
-        .img-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .img-box { 
-            height: 150px; /* Tinggi Tetap Gambar */
+        /* Aktiviti */
+        .section-title { font-weight: bold; font-size: 10pt; border-bottom: 1px solid black; margin-top: 10px; display: inline-block; }
+        table.act-table { width: 100%; font-size: 9.5pt; margin-top: 2px; }
+        table.act-table td { padding: 1px 0; }
+
+        /* Gambar - DIKECILKAN */
+        .img-header { margin-top: 10px; text-align: center; background: #eee; border: 1px solid #000; font-weight: bold; font-size: 9pt; padding: 2px; }
+        table.img-table { width: 100%; border-collapse: collapse; margin-top: 0px; }
+        table.img-table td { 
+            width: 33.33%; 
+            height: 120px; /* Tinggi gambar dikurangkan ke 120px */
             border: 1px solid #999; 
-            display: flex; align-items: center; justify-content: center; 
-            background: #f9fafb; overflow: hidden; 
+            text-align: center; 
+            vertical-align: middle; 
+            padding: 0;
+            background: #f9f9f9;
         }
-        .img-box img { width: 100%; height: 100%; object-fit: cover; }
+        table.img-table img { width: 100%; height: 120px; object-fit: cover; display: block; }
 
-        .footer-sign { margin-top: 30px; }
-        .line-sign { border-top: 1px solid black; width: 250px; margin-top: 50px; padding-top: 5px; }
+        /* Footer */
+        .footer-div { margin-top: 15px; font-size: 9.5pt; }
+        .sign-box { border-top: 1px solid #000; width: 220px; margin-top: 35px; padding-top: 2px; }
+
     </style>
 </head>
-<body class="p-4">
+<body class="p-4 md:p-8">
 
     <div class="max-w-3xl mx-auto dashboard-card rounded-lg p-6">
         <div class="text-center mb-6">
-            <img src="https://i.ibb.co/xKSj5N9w/Logo-SKSP-01.png" class="h-16 mx-auto mb-2">
+            <img src="https://i.ibb.co/xKSj5N9w/Logo-SKSP-01.png" class="h-20 mx-auto mb-2">
             <h1 class="text-xl font-bold text-emerald-800">SISTEM LAPORAN KOKURIKULUM</h1>
-            <p class="text-sm text-gray-500">SK SERI PULEH</p>
+            <p class="text-sm text-gray-600">SK SERI PULEH</p>
         </div>
 
-        <form id="formLaporan" class="space-y-4">
+        <form id="formKoku" class="space-y-3">
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="text-xs font-bold text-gray-700">Tahun</label>
-                    <select id="tahun" class="w-full p-2 rounded text-sm bg-gray-50"><option>2026</option><option>2027</option><option>2028</option><option>2029</option><option>2030</option></select>
+                    <label class="block text-xs font-bold text-gray-700">Tahun</label>
+                    <select id="tahun" class="w-full p-2 text-sm rounded"><option>2026</option><option>2027</option><option>2028</option><option>2029</option><option>2030</option></select>
                 </div>
                 <div>
-                    <label class="text-xs font-bold text-gray-700">Kategori</label>
-                    <select id="jenis" class="w-full p-2 rounded text-sm bg-gray-50" onchange="updateUnits()">
+                    <label class="block text-xs font-bold text-gray-700">Kategori</label>
+                    <select id="jenis" class="w-full p-2 text-sm rounded" onchange="updateUnits()">
                         <option value="LAPORAN UNIT BERUNIFORM">UNIT BERUNIFORM</option>
                         <option value="LAPORAN RUMAH SUKAN">RUMAH SUKAN</option>
                         <option value="LAPORAN KELAB & PERSATUAN">KELAB & PERSATUAN</option>
@@ -93,34 +101,34 @@
             </div>
 
             <div>
-                <label class="text-xs font-bold text-gray-700">Nama Unit</label>
-                <input type="text" id="unit" list="list_unit" class="caps w-full p-2 rounded text-sm bg-gray-50" placeholder="Pilih unit..." required>
+                <label class="block text-xs font-bold text-gray-700">Nama Unit</label>
+                <input type="text" id="unit" list="list_unit" class="caps w-full p-2 text-sm rounded" placeholder="Pilih Unit..." required>
                 <datalist id="list_unit"></datalist>
             </div>
 
             <div class="grid grid-cols-3 gap-2">
-                <div><label class="text-xs font-bold text-gray-700">Tarikh</label><input type="date" id="tarikh" class="w-full p-2 rounded text-sm"></div>
-                <div><label class="text-xs font-bold text-gray-700">Masa Mula</label><input type="time" id="mula" class="w-full p-2 rounded text-sm"></div>
-                <div><label class="text-xs font-bold text-gray-700">Masa Tamat</label><input type="time" id="tamat" class="w-full p-2 rounded text-sm"></div>
+                <div><label class="text-xs font-bold">Tarikh</label><input type="date" id="tarikh" class="w-full p-2 text-sm rounded"></div>
+                <div><label class="text-xs font-bold">Mula</label><input type="time" id="mula" class="w-full p-2 text-sm rounded"></div>
+                <div><label class="text-xs font-bold">Tamat</label><input type="time" id="tamat" class="w-full p-2 text-sm rounded"></div>
             </div>
 
             <div class="grid grid-cols-2 gap-3">
-                <div><label class="text-xs font-bold text-gray-700">Tempat</label><input type="text" id="tempat" class="caps w-full p-2 rounded text-sm"></div>
+                <div><label class="text-xs font-bold">Tempat</label><input type="text" id="tempat" class="caps w-full p-2 text-sm rounded"></div>
                 <div>
-                    <label class="text-xs font-bold text-gray-700">Kehadiran</label>
+                    <label class="text-xs font-bold">Kehadiran</label>
                     <div class="flex gap-1">
-                        <input type="number" id="hadir" class="w-full p-2 rounded text-sm" placeholder="Hadir">
-                        <input type="number" id="penuh" class="w-full p-2 rounded text-sm" placeholder="Penuh">
+                        <input type="number" id="hadir" class="w-full p-2 text-sm rounded" placeholder="Hadir">
+                        <input type="number" id="penuh" class="w-full p-2 text-sm rounded" placeholder="Penuh">
                     </div>
                 </div>
             </div>
 
-            <div class="bg-gray-50 p-2 rounded border">
+            <div class="bg-emerald-50 p-2 rounded border border-emerald-100">
                 <label class="text-xs font-bold text-emerald-800">Guru Penasihat</label>
-                <div id="guru_box" class="mt-1 space-y-2">
+                <div id="guru_box" class="space-y-1 mt-1">
                     <div class="flex gap-1">
-                        <input type="text" list="list_guru" class="inp-guru caps w-full p-2 rounded text-sm border" placeholder="Nama Guru">
-                        <button type="button" onclick="addGuru()" class="bg-emerald-600 text-white px-3 rounded">+</button>
+                        <input type="text" list="list_guru" class="inp-guru caps w-full p-2 text-sm rounded border" placeholder="Nama Guru">
+                        <button type="button" onclick="addGuru()" class="bg-emerald-600 text-white px-3 rounded font-bold">+</button>
                     </div>
                 </div>
                 <datalist id="list_guru"></datalist>
@@ -129,10 +137,10 @@
             <div>
                 <label class="text-xs font-bold text-gray-700">Aktiviti (Wajib 4)</label>
                 <div class="space-y-1 mt-1">
-                    <input type="text" id="a1" class="w-full p-2 rounded text-sm border" placeholder="1.">
-                    <input type="text" id="a2" class="w-full p-2 rounded text-sm border" placeholder="2.">
-                    <input type="text" id="a3" class="w-full p-2 rounded text-sm border" placeholder="3.">
-                    <input type="text" id="a4" class="w-full p-2 rounded text-sm border" placeholder="4.">
+                    <input type="text" id="a1" class="w-full p-2 text-sm rounded border" placeholder="1.">
+                    <input type="text" id="a2" class="w-full p-2 text-sm rounded border" placeholder="2.">
+                    <input type="text" id="a3" class="w-full p-2 text-sm rounded border" placeholder="3.">
+                    <input type="text" id="a4" class="w-full p-2 text-sm rounded border" placeholder="4.">
                 </div>
             </div>
 
@@ -147,53 +155,65 @@
 
             <div>
                 <label class="text-xs font-bold text-gray-700">Disediakan Oleh</label>
-                <input type="text" id="penyedia" list="list_guru" class="caps w-full p-2 rounded text-sm">
+                <input type="text" id="penyedia" list="list_guru" class="caps w-full p-2 text-sm rounded">
             </div>
 
-            <button type="button" onclick="makePDF()" class="w-full bg-emerald-700 text-white font-bold py-3 rounded shadow hover:bg-emerald-800 mt-2">
+            <button type="button" onclick="makePDF()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded shadow mt-2">
                 JANA PDF (A4 FIT)
             </button>
         </form>
     </div>
 
-    <div class="hidden-report">
+    <div class="hidden-container">
         <div id="pdf-content">
-            <div class="header-pdf">
-                <img src="https://i.ibb.co/xKSj5N9w/Logo-SKSP-01.png">
-                <h2>SEKOLAH KEBANGSAAN SERI PULEH</h2>
-                <h3 id="p_jenis">LAPORAN AKTIVITI KOKURIKULUM</h3>
-            </div>
-
-            <table class="tbl-pdf">
-                <tr><td class="tbl-label">TAHUN</td><td id="p_tahun"></td></tr>
-                <tr><td class="tbl-label">UNIT / KELAB</td><td id="p_unit" style="font-weight:bold;"></td></tr>
-                <tr><td class="tbl-label">TARIKH / MASA</td><td id="p_tarikh"></td></tr>
-                <tr><td class="tbl-label">TEMPAT</td><td id="p_tempat"></td></tr>
-                <tr><td class="tbl-label">KEHADIRAN</td><td id="p_hadir"></td></tr>
-                <tr><td class="tbl-label">GURU PENASIHAT</td><td id="p_guru"></td></tr>
+            
+            <table class="header-table">
+                <tr>
+                    <td align="center" style="padding-bottom: 5px;">
+                        <img src="https://i.ibb.co/xKSj5N9w/Logo-SKSP-01.png" style="height: 70px;">
+                        <div class="header-text">
+                            <h2>SEKOLAH KEBANGSAAN SERI PULEH</h2>
+                            <h3 id="p_jenis">LAPORAN AKTIVITI KOKURIKULUM</h3>
+                        </div>
+                    </td>
+                </tr>
             </table>
 
-            <div style="margin-bottom: 20px;">
-                <div class="section-title">RINGKASAN AKTIVITI:</div>
-                <div style="padding-left: 5px;">
-                    <div id="p_a1"></div><div id="p_a2"></div><div id="p_a3"></div><div id="p_a4"></div>
-                </div>
-            </div>
+            <table class="info-table">
+                <tr><td class="bg-gray">TAHUN</td><td id="p_tahun"></td></tr>
+                <tr><td class="bg-gray">UNIT / KELAB</td><td id="p_unit" style="font-weight:bold;"></td></tr>
+                <tr><td class="bg-gray">TARIKH / MASA</td><td id="p_tarikh"></td></tr>
+                <tr><td class="bg-gray">TEMPAT</td><td id="p_tempat"></td></tr>
+                <tr><td class="bg-gray">KEHADIRAN</td><td id="p_hadir"></td></tr>
+                <tr><td class="bg-gray">GURU PENASIHAT</td><td id="p_guru"></td></tr>
+            </table>
 
-            <div>
-                <div style="text-align:center; background:#eee; padding:3px; font-weight:bold; margin-bottom:5px; border:1px solid #000;">GAMBAR AKTIVITI</div>
-                <div class="img-grid" id="p_img_container">
-                    </div>
-            </div>
+            <div class="section-title">RINGKASAN AKTIVITI:</div>
+            <table class="act-table">
+                <tr><td id="p_a1"></td></tr>
+                <tr><td id="p_a2"></td></tr>
+                <tr><td id="p_a3"></td></tr>
+                <tr><td id="p_a4"></td></tr>
+            </table>
 
-            <div class="footer-sign">
+            <div class="img-header">GAMBAR AKTIVITI</div>
+            <table class="img-table">
+                <tr>
+                    <td id="img_td_0"></td>
+                    <td id="img_td_1" style="border-left: none; border-right: none;"></td>
+                    <td id="img_td_2"></td>
+                </tr>
+            </table>
+
+            <div class="footer-div">
                 <p>Disediakan oleh,</p>
-                <div class="line-sign">
-                    <p style="font-weight:bold; margin:0;" id="p_penyedia"></p>
-                    <p style="margin:0;">Guru Penasihat</p>
-                    <p style="margin:0; font-weight:bold;" id="p_unit_bawah"></p>
+                <div class="sign-box">
+                    <p style="font-weight: bold; margin: 0;" id="p_penyedia"></p>
+                    <p style="margin: 0;">Guru Penasihat</p>
+                    <p style="margin: 0; font-weight: bold;" id="p_unit_bawah"></p>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -207,9 +227,8 @@
         };
         const dbGuru = ["SARDI BIN HASSHIM", "AYU SARAH BINTI ABDULLAH", "MASKOR BIN OSMAN", "ARNIZA BINTI ATAN", "MUHAMMAD AIMAN SYAFIQ BIN ABDUL RAHMAN", "HANAPIAH BINTI TAHERAN", "RINI BINTI YUNUS", "HAZLEYN BT. RAHMAT", "SITI NOR FAZIDAH BINTI TAHIR", "MUHD RIDHWAN BIN SANDONG", "AHMAD HAWAZAN BIN KHOILED", "NUR FARIHIN BINTI MUHAMAD YUSOF", "SHARIFAH BINTI KATMIN", "AMAR ARIFF BIN MOHAMAD HATTA", "ASPRINAH BINTI ABU", "SHAHROM BIN SUKINI", "KAMARUL ARIFFIN BIN RAHMAT", "NOR AISAH BINTI JAIS", "SITI FATIMAH BINTI BAHAR", "SITI NURWAFIYZA BINTI MASRUKIN", "VILMA FARHA BINTI MD AFFINDI", "HIDAYATI BINTI MARNO @ MOHD NOR", "FATIMAH BINTI MASRAN", "SAMIAH BINTI SEKAN", "FATIN ATHIRAH BINTI MAT YUSOFF", "MOHD ROFIZEN BIN IBRAHIM", "MUHAMMAD RAJIE BIN MAHADI", "MOHAMAD KHAIRUL ANUAR BIN MOHD YUSOF", "RAHAYU BINTI MOHD JALIL", "ZAHARIAH BINTI SAMADUN", "NAZIHAH IZYAN BINTI AYUB", "NURAZIAH BINTI BAHROM", "MUHAMMAD HAMIZI BIN MOHD SAID", "MOHD.NAZID BIN HARON", "MASITAH BINTI MEOR HUSSIN", "NOR ASHIKIN BINTI RAMLI", "ZAILATI BT ALI", "NOOR HAZURA BINTI HAMDAN", "SITI RIFA BINTI MOHD SAIM"];
 
-        // INIT
-        const listGuru = document.getElementById('list_guru');
-        dbGuru.forEach(g => listGuru.innerHTML += `<option value="${g}">`);
+        const gList = document.getElementById('list_guru');
+        dbGuru.forEach(g => gList.innerHTML += `<option value="${g}">`);
         updateUnits();
 
         function updateUnits(){
@@ -230,21 +249,20 @@
         }
 
         function addGuru(){
-            const div = document.createElement('div');
-            div.className = "flex gap-1";
-            div.innerHTML = `<input type="text" list="list_guru" class="inp-guru caps w-full p-2 rounded text-sm border"><button type="button" onclick="this.parentElement.remove()" class="bg-red-500 text-white px-3 rounded">-</button>`;
-            document.getElementById('guru_box').appendChild(div);
+            const d = document.createElement('div');
+            d.className = "flex gap-1";
+            d.innerHTML = `<input type="text" list="list_guru" class="inp-guru caps w-full p-2 text-sm rounded border"><button type="button" onclick="this.parentElement.remove()" class="bg-red-500 text-white px-3 rounded">-</button>`;
+            document.getElementById('guru_box').appendChild(d);
         }
 
-        function makePDF(){
+        function makePDF() {
             const unitVal = document.getElementById('unit').value.toUpperCase();
             if(!unitVal) return alert("Sila isi Nama Unit!");
 
-            // 1. ISI DATA KE TEMPLATE
+            // ISI DATA
             document.getElementById('p_tahun').innerText = document.getElementById('tahun').value;
             document.getElementById('p_jenis').innerText = document.getElementById('jenis').value;
             document.getElementById('p_unit').innerText = unitVal;
-            
             const tm = document.getElementById('mula').value;
             const tt = document.getElementById('tamat').value;
             document.getElementById('p_tarikh').innerText = `${document.getElementById('tarikh').value}  (${tm} - ${tt})`;
@@ -263,31 +281,31 @@
             document.getElementById('p_penyedia').innerText = document.getElementById('penyedia').value.toUpperCase();
             document.getElementById('p_unit_bawah').innerText = unitVal;
 
-            const imgBox = document.getElementById('p_img_container');
-            imgBox.innerHTML = "";
-            rawImgs.forEach(src => {
-                let d = document.createElement('div');
-                d.className = "img-box";
-                d.innerHTML = src ? `<img src="${src}">` : `<span style='color:#ccc'>TIADA GAMBAR</span>`;
-                imgBox.appendChild(d);
+            rawImgs.forEach((src, i) => {
+                const cell = document.getElementById(`img_td_${i}`);
+                cell.innerHTML = src ? `<img src="${src}">` : `<span style="color:#ccc; font-size:8pt;">TIADA GAMBAR</span>`;
             });
 
-            // 2. JANA PDF
-            const element = document.getElementById('pdf-content');
-            
-            // PENTING: Tunjuk sekejap untuk render
-            document.querySelector('.hidden-report').style.visibility = 'visible';
+            // GENERATE - SETTINGS PENTING
+            const container = document.querySelector('.hidden-container');
+            container.style.visibility = 'visible';
+            const elem = document.getElementById('pdf-content');
             
             const opt = {
-                margin: 0, // KITA GUNA PADDING CSS
+                margin: 0,
                 filename: `Laporan_${unitVal.replace(/\s/g,'_')}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
+                html2canvas: { 
+                    scale: 2, 
+                    useCORS: true,
+                    scrollY: 0,
+                    windowWidth: 1200 // WAJIB ADA UNTUK MOBILE
+                },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
-            html2pdf().set(opt).from(element).save().then(() => {
-                document.querySelector('.hidden-report').style.visibility = 'hidden';
+            html2pdf().set(opt).from(elem).save().then(() => {
+                container.style.visibility = 'hidden';
             });
         }
     </script>
